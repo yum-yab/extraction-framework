@@ -51,9 +51,25 @@ class ParserUtils( val context : { def language : Language } )
             {
                 val fraction = if(fract != null) fract.substring(1) else ""
                 val trailingZeros = "0" * (scales(scale.toLowerCase) - fraction.length)
-                begin + integer/*.replace(thousandsSeparator, "")*/ + fraction + trailingZeros + end
+                // 3 is hardcoded, should there be any other groupinSize then 3?
+                begin + integer/*.replace(thousandsSeparator, "")*/ + insertGroupingSeperator(fraction + trailingZeros, groupingSeparator, 3) + end
             }
             case _ => input
         }
     }
+
+  def insertGroupingSeperator(number: String, grouipingSeperator: Char, groupingSize:Integer): String = {
+
+    if (groupingSize == 0) {
+      return number
+    } else {
+      var result: StringBuilder = new StringBuilder
+      val grouped = number.grouped(groupingSize).toList
+
+      for (i <- grouped) {
+        result.append(grouipingSeperator + i)
+      }
+      result.toString()
+    }
+  }
 }
